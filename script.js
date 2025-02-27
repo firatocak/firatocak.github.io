@@ -1,4 +1,3 @@
-// Örnek bir Matrix kod akışı scripti ekliyorum.
 const canvas = document.getElementById('matrix');
 const ctx = canvas.getContext('2d');
 
@@ -17,7 +16,7 @@ for (let x = 0; x < columns; x++) {
 }
 
 function draw() {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.04)'; // Daha hafif bir arka plan temizleme
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = '#0f0';
@@ -35,9 +34,16 @@ function draw() {
     }
 }
 
-setInterval(draw, 30);
-
-window.addEventListener('resize', () => {
+function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-});
+    columns = canvas.width / fontSize;
+
+    damlalar.length = 0; // Damlaları sıfırla
+    for (let x = 0; x < columns; x++) {
+        damlalar[x] = 1;
+    }
+}
+
+setInterval(draw, 30);
+window.addEventListener('resize', resizeCanvas);
