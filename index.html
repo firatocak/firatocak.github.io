@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matrix - Mail Adresi</title>
+    <title>Follow The White Rabbit!</title>
+    <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/firatocak/firatocak.github.io/refs/heads/main/favicon.ico">
     <style>
         @font-face {
             font-family: 'MatrixFont';
@@ -38,11 +39,18 @@
             padding: 10px 20px;
             border-radius: 5px;
         }
+        .email a {
+            color: #0F0;
+            text-decoration: none;
+        }
+        .email a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <canvas id="matrixCanvas"></canvas>
-    <div class="email">info@firatocak.com</div>
+    <div class="email"><a href="mailto:info@firatocak.com">info@firatocak.com</a></div>
     <script>
         const canvas = document.getElementById("matrixCanvas");
         const ctx = canvas.getContext("2d");
