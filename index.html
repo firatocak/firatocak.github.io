@@ -94,6 +94,19 @@
             text-align: center;
             margin-top: 10px;
         }
+        .password-generator .copy-btn {
+            background-color: #0F0;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .password-generator .copy-btn:hover {
+            background-color: #0a0;
+        }
     </style>
 </head>
 <body>
@@ -103,6 +116,7 @@
     <div class="password-generator">
         <button onclick="generatePassword()">Güçlü Şifre Oluştur</button>
         <input type="text" id="passwordOutput" readonly placeholder="Şifre burada görünecek">
+        <button class="copy-btn" onclick="copyPassword()">Kopyala</button>
     </div>
 
     <script>
@@ -162,6 +176,15 @@
                 password += characters.charAt(Math.floor(Math.random() * characters.length));
             }
             document.getElementById("passwordOutput").value = password;
+        }
+
+        function copyPassword() {
+            const passwordField = document.getElementById("passwordOutput");
+            passwordField.select();
+            passwordField.setSelectionRange(0, 99999); // Mobil cihazlar için
+            document.execCommand("copy"); // Panoya kopyala
+
+            alert("Şifre panoya kopyalandı!");
         }
 
         setInterval(drawMatrix, 50);
