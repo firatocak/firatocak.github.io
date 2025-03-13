@@ -24,22 +24,6 @@
             width: 100%;
             height: 100%;
         }
-        .info-box {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 20px;
-            font-weight: bold;
-            color: #0F0;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 10px 20px;
-            border-radius: 5px;
-            letter-spacing: 1px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.75);
-        }
         .email {
             position: absolute;
             top: 50%;
@@ -62,12 +46,64 @@
         .email a:hover {
             text-decoration: underline;
         }
+        .ip-display {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            font-weight: bold;
+            color: #0F0;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-family: 'MatrixFont', monospace;
+        }
+        .password-generator {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            color: #0F0;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-family: 'MatrixFont', monospace;
+            text-align: center;
+        }
+        .password-generator button {
+            background-color: #0F0;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .password-generator button:hover {
+            background-color: #0a0;
+        }
+        .password-generator input {
+            background-color: black;
+            color: #0F0;
+            border: 2px solid #0F0;
+            font-size: 16px;
+            padding: 10px;
+            width: 200px;
+            text-align: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <canvas id="matrixCanvas"></canvas>
     <div class="email"><a href="mailto:info@firatocak.com">info@firatocak.com</a></div>
-    <div class="info-box" id="info">IP: Yükleniyor... | Hava: Yükleniyor...</div>
+    <div id="info" class="ip-display"></div>
+    <div class="password-generator">
+        <button onclick="generatePassword()">Güçlü Şifre Oluştur</button>
+        <input type="text" id="passwordOutput" readonly placeholder="Şifre burada görünecek">
+    </div>
 
     <script>
         const canvas = document.getElementById("matrixCanvas");
@@ -104,30 +140,31 @@
                 drops[i]++;
             }
         }
-        setInterval(drawMatrix, 50);
 
-        async function fetchIPandWeather() {
-        try {
-        // IP Adresi ve Konum Bilgisi
-        const ipResponse = await fetch("http://ip-api.com/json");
-        const ipData = await ipResponse.json();
-        const ip = ipData.query;
-        const city = ipData.city;
-        const lat = ipData.lat;
-        const lon = ipData.lon;
+        async function fetchIP() {
+            try {
+                const ipResponse = await fetch("https://api64.ipify.org?format=json");
+                const ipData = await ipResponse.json();
+                const ip = ipData.ip;
 
-        // Hava Durumu Bilgisi
-        const weatherResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-        const weatherData = await weatherResponse.json();
-        const weather = weatherData.current_weather.temperature + "°C";
-
-        // Ekrana Yazdır
-        document.getElementById("info").innerText = `IP: ${ip} | Konum: ${city} | Hava: ${weather}`;
-        } catch (error) {
-        document.getElementById("info").innerText = "IP ve hava durumu alınamadı!";
+                document.getElementById("info").innerText = `IP Adresiniz: ${ip}`;
+            } catch (error) {
+                document.getElementById("info").innerText = "IP alınamadı!";
             }
         }
-        fetchIPandWeather();
+        fetchIP();
+
+        function generatePassword() {
+            const passwordLength = 16; // Şifre uzunluğu
+            let password = "";
+            const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+            for (let i = 0; i < passwordLength; i++) {
+                password += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            document.getElementById("passwordOutput").value = password;
+        }
+
+        setInterval(drawMatrix, 50);
     </script>
 </body>
 </html>
