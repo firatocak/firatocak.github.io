@@ -107,21 +107,26 @@
         setInterval(drawMatrix, 50);
 
         async function fetchIPandWeather() {
-            try {
-                const ipResponse = await fetch("https://ifconfig.co/json");
-                const ipData = await ipResponse.json();
-                const ip = ipData.ip;
-                const city = ipData.city;
+        try {
+        // IP Adresi ve Konum Bilgisi
+        const ipResponse = await fetch("http://ip-api.com/json");
+        const ipData = await ipResponse.json();
+        const ip = ipData.query;
+        const city = ipData.city;
+        const lat = ipData.lat;
+        const lon = ipData.lon;
 
-                const weatherResponse = await fetch(`https://wttr.in/${city}?format=%C+%t`);
-                const weather = await weatherResponse.text();
+        // Hava Durumu Bilgisi
+        const weatherResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+        const weatherData = await weatherResponse.json();
+        const weather = weatherData.current_weather.temperature + "°C";
 
-                document.getElementById("info").innerText = `IP: ${ip} | Konum: ${city} | Hava: ${weather}`;
-            } catch (error) {
-                document.getElementById("info").innerText = "IP ve hava durumu alınamadı!";
+        // Ekrana Yazdır
+        document.getElementById("info").innerText = `IP: ${ip} | Konum: ${city} | Hava: ${weather}`;
+        } catch (error) {
+        document.getElementById("info").innerText = "IP ve hava durumu alınamadı!";
             }
         }
-
         fetchIPandWeather();
     </script>
 </body>
