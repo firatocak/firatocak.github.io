@@ -24,6 +24,22 @@
             width: 100%;
             height: 100%;
         }
+        .info-box {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            font-weight: bold;
+            color: #0F0;
+            font-family: 'MatrixFont', monospace;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 20px;
+            border-radius: 5px;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.75);
+        }
         .email {
             position: absolute;
             top: 50%;
@@ -51,6 +67,11 @@
 <body>
     <canvas id="matrixCanvas"></canvas>
     <div class="email"><a href="mailto:info@firatocak.com">info@firatocak.com</a></div>
+    <div class="info-box">
+        <div id="weather">Hava: Yükleniyor...</div>
+        <div id="visitorCount">Ziyaretçi: 0</div>
+    </div>
+
     <script>
         const canvas = document.getElementById("matrixCanvas");
         const ctx = canvas.getContext("2d");
@@ -86,8 +107,38 @@
                 drops[i]++;
             }
         }
-
         setInterval(drawMatrix, 50);
+
+        async function fetchWeather() {
+            const city = "Istanbul"; // Şehri değiştirebilirsin
+            const url = `https://wttr.in/${city}?format=%t+%C`;
+
+            try {
+                const response = await fetch(url);
+                const weatherText = await response.text();
+                document.getElementById("weather").innerText = `Hava: ${weatherText}`;
+            } catch (error) {
+                document.getElementById("weather").innerText = "Hava: Bilgi alınamadı!";
+            }
+        }
+
+        function updateVisitorCounter() {
+            let visitorId = localStorage.getItem("visitorId");
+            if (!visitorId) {
+                visitorId = Math.floor(Math.random() * 1000000);
+                localStorage.setItem("visitorId", visitorId);
+            }
+            
+            let visitorCount = localStorage.getItem("visitorCount") || 0;
+            visitorCount = parseInt(visitorCount) + 1;
+            localStorage.setItem("visitorCount", visitorCount);
+            document.getElementById("visitorCount").innerText = `Ziyaretçi: ${visitorCount}`;
+        }
+
+        window.onload = () => {
+            fetchWeather();
+            updateVisitorCounter();
+        };
     </script>
 </body>
 </html>
