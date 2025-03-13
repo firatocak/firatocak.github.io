@@ -32,12 +32,12 @@
             font-size: 20px;
             font-weight: bold;
             color: #0F0;
-            font-family: 'MatrixFont', monospace;
+            font-family: Arial, sans-serif;
             text-align: center;
             background: rgba(0, 0, 0, 0.6);
             padding: 10px 20px;
             border-radius: 5px;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.75);
         }
         .email {
@@ -67,10 +67,7 @@
 <body>
     <canvas id="matrixCanvas"></canvas>
     <div class="email"><a href="mailto:info@firatocak.com">info@firatocak.com</a></div>
-    <div class="info-box">
-        <div id="weather">Hava: Yükleniyor...</div>
-        <div id="visitorCount">Ziyaretçi: 0</div>
-    </div>
+    <div class="info-box" id="info">IP: Yükleniyor... | Hava: Yükleniyor...</div>
 
     <script>
         const canvas = document.getElementById("matrixCanvas");
@@ -109,36 +106,23 @@
         }
         setInterval(drawMatrix, 50);
 
-        async function fetchWeather() {
-            const city = "Istanbul"; // Şehri değiştirebilirsin
-            const url = `https://wttr.in/${city}?format=%t+%C`;
-
+        async function fetchIPandWeather() {
             try {
-                const response = await fetch(url);
-                const weatherText = await response.text();
-                document.getElementById("weather").innerText = `Hava: ${weatherText}`;
+                const ipResponse = await fetch("https://ifconfig.co/json");
+                const ipData = await ipResponse.json();
+                const ip = ipData.ip;
+                const city = ipData.city;
+
+                const weatherResponse = await fetch(`https://wttr.in/${city}?format=%C+%t`);
+                const weather = await weatherResponse.text();
+
+                document.getElementById("info").innerText = `IP: ${ip} | Konum: ${city} | Hava: ${weather}`;
             } catch (error) {
-                document.getElementById("weather").innerText = "Hava: Bilgi alınamadı!";
+                document.getElementById("info").innerText = "IP ve hava durumu alınamadı!";
             }
         }
 
-        function updateVisitorCounter() {
-            let visitorId = localStorage.getItem("visitorId");
-            if (!visitorId) {
-                visitorId = Math.floor(Math.random() * 1000000);
-                localStorage.setItem("visitorId", visitorId);
-            }
-            
-            let visitorCount = localStorage.getItem("visitorCount") || 0;
-            visitorCount = parseInt(visitorCount) + 1;
-            localStorage.setItem("visitorCount", visitorCount);
-            document.getElementById("visitorCount").innerText = `Ziyaretçi: ${visitorCount}`;
-        }
-
-        window.onload = () => {
-            fetchWeather();
-            updateVisitorCounter();
-        };
+        fetchIPandWeather();
     </script>
 </body>
 </html>
