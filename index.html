@@ -158,11 +158,12 @@
 
         async function fetchIP() {
             try {
-                const ipResponse = await fetch("https://ifconfig.co/ip");
-                const ip = await ipResponse.text();
-                document.getElementById("info").innerText = `IP Adresiniz: ${ip.trim()}`;
+                const response = await fetch("https://api.ipify.org?format=json");
+                const data = await response.json();
+                document.getElementById("info").innerText = `IP Adresiniz: ${data.ip}`;
             } catch (error) {
-                document.getElementById("info").innerText = "IP alınamadı!";
+                console.error("IP adresi alınamadı:", error);
+                document.getElementById("info").innerText = "IP adresi alınamadı!";
             }
         }
         fetchIP();
