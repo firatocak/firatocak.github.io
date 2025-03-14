@@ -29,7 +29,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 32px;
+            font-size: 28px;
             font-weight: bold;
             color: #0F0;
             font-family: 'MatrixFont', monospace;
@@ -51,7 +51,7 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
             color: #0F0;
             background: rgba(0, 0, 0, 0.6);
@@ -131,24 +131,25 @@
         const nums = "0123456789";
         const alphabet = katakana + latin + nums;
 
-        const fontSize = 18;
-        const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
+        const fontSize = 14; // Daha küçük font boyutu
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = Array(columns).fill(1);
 
         function drawMatrix() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
+
             ctx.fillStyle = "#0F0";
             ctx.font = `${fontSize}px MatrixFont, monospace`;
-            
+
             for (let i = 0; i < drops.length; i++) {
                 const text = alphabet[Math.floor(Math.random() * alphabet.length)];
                 const x = i * fontSize;
                 const y = drops[i] * fontSize;
+
                 ctx.fillText(text, x, y);
-                
-                if (y > canvas.height && Math.random() > 0.975) {
+
+                if (y > canvas.height && Math.random() > 0.95) {
                     drops[i] = 0;
                 }
                 drops[i]++;
@@ -169,7 +170,7 @@
         fetchIP();
 
         function generatePassword() {
-            const passwordLength = 16; // Şifre uzunluğu
+            const passwordLength = 16;
             let password = "";
             const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
             for (let i = 0; i < passwordLength; i++) {
@@ -181,8 +182,8 @@
         function copyPassword() {
             const passwordField = document.getElementById("passwordOutput");
             passwordField.select();
-            passwordField.setSelectionRange(0, 99999); // Mobil cihazlar için
-            document.execCommand("copy"); // Panoya kopyala
+            passwordField.setSelectionRange(0, 99999);
+            document.execCommand("copy");
 
             alert("Şifre panoya kopyalandı!");
         }
